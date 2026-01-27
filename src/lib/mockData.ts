@@ -19,10 +19,24 @@ export interface DocumentPage {
   images: string[];
 }
 
+export interface User {
+  id: string;
+  name: string;
+  avatar?: string;
+}
+
+export interface DocumentComment {
+  id: string;
+  text: string;
+  author: User;
+  createdAt: Date;
+}
+
 export interface DocumentFeedback {
   rating: number;
   preference: 'like' | 'dislike' | 'maybe' | null;
   comment: string;
+  comments: DocumentComment[];
 }
 
 export interface PharmaDocument {
@@ -39,7 +53,17 @@ export interface PharmaDocument {
   pages: DocumentPage[];
   feedback: DocumentFeedback;
   status: 'processing' | 'ready' | 'error';
+  lastEditedBy?: User;
+  lastEditedAt?: Date;
 }
+
+export const mockUsers: User[] = [
+  { id: 'user-1', name: 'Dr. Sarah Chen' },
+  { id: 'user-2', name: 'James Miller' },
+  { id: 'user-3', name: 'Emily Watson' },
+];
+
+export const currentUser: User = mockUsers[0];
 
 export const molecules: Molecule[] = [
   {
@@ -99,8 +123,17 @@ export const mockDocuments: PharmaDocument[] = [
       { id: 'p1', pageNumber: 1, text: 'Introduction to anti-inflammatory therapeutics...', images: [] },
       { id: 'p2', pageNumber: 2, text: 'Methodology and patient selection criteria...', images: [] },
     ],
-    feedback: { rating: 4, preference: 'like', comment: 'Excellent methodology section' },
+    feedback: { 
+      rating: 4, 
+      preference: 'like', 
+      comment: '',
+      comments: [
+        { id: 'c1', text: 'Excellent methodology section', author: mockUsers[1], createdAt: new Date('2024-01-16') }
+      ]
+    },
     status: 'ready',
+    lastEditedBy: mockUsers[1],
+    lastEditedAt: new Date('2024-01-18'),
   },
   {
     id: 'doc-2',
@@ -116,8 +149,10 @@ export const mockDocuments: PharmaDocument[] = [
     pages: [
       { id: 'p1', pageNumber: 1, text: 'Overview of nanoparticle technologies...', images: [] },
     ],
-    feedback: { rating: 5, preference: null, comment: '' },
+    feedback: { rating: 5, preference: null, comment: '', comments: [] },
     status: 'ready',
+    lastEditedBy: mockUsers[2],
+    lastEditedAt: new Date('2024-01-22'),
   },
   {
     id: 'doc-3',
@@ -131,7 +166,7 @@ export const mockDocuments: PharmaDocument[] = [
     tags: [sampleTags[3], sampleTags[5]],
     molecules: [molecules[1]],
     pages: [],
-    feedback: { rating: 0, preference: null, comment: '' },
+    feedback: { rating: 0, preference: null, comment: '', comments: [] },
     status: 'ready',
   },
 ];
