@@ -4,7 +4,8 @@ import { Layout } from '@/components/Layout';
 import { TagChip } from '@/components/TagChip';
 import { MoleculeCard } from '@/components/MoleculeCard';
 import { FeedbackPanel } from '@/components/FeedbackPanel';
-import { mockDocuments, PharmaDocument } from '@/lib/mockData';
+import { mockDocuments, PharmaDocument, currentUser, DocumentComment } from '@/lib/mockData';
+import { CommentSection } from '@/components/CommentSection';
 import { 
   ArrowLeft, 
   FileText, 
@@ -43,7 +44,21 @@ const DocumentViewer = () => {
   const FileIcon = document.fileType === 'ppt' ? Presentation : FileText;
 
   const handleFeedbackChange = (feedback: PharmaDocument['feedback']) => {
-    setDocument((prev) => prev ? { ...prev, feedback } : prev);
+    setDocument((prev) => prev ? { 
+      ...prev, 
+      feedback,
+      lastEditedBy: currentUser,
+      lastEditedAt: new Date(),
+    } : prev);
+  };
+
+  const handleAddComment = (comment: DocumentComment) => {
+    if (!document) return;
+    const updatedFeedback = {
+      ...document.feedback,
+      comments: [...document.feedback.comments, comment],
+    };
+    handleFeedbackChange(updatedFeedback);
   };
 
   return (
@@ -224,6 +239,17 @@ const DocumentViewer = () => {
             <FeedbackPanel
               feedback={document.feedback}
               onChange={handleFeedbackChange}
+            />
+          </div>
+
+          {/* Comments Section */}
+          <div className="mt-6 pt-6 border-t border-border/50">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">
+              Comments
+            </h3>
+            <CommentSection
+              comments={document.feedback.comments}
+              onAddComment={handleAddComment}
             />
           </div>
         </aside>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { DocumentCard } from '@/components/DocumentCard';
 import { SearchInput } from '@/components/SearchInput';
-import { mockDocuments, PharmaDocument } from '@/lib/mockData';
+import { mockDocuments, PharmaDocument, currentUser } from '@/lib/mockData';
 import { FileText, TrendingUp, Tag } from 'lucide-react';
 
 const Index = () => {
@@ -17,7 +17,12 @@ const Index = () => {
 
   const handleFeedbackChange = (docId: string, feedback: PharmaDocument['feedback']) => {
     setDocuments((prev) =>
-      prev.map((doc) => (doc.id === docId ? { ...doc, feedback } : doc))
+      prev.map((doc) => (doc.id === docId ? { 
+        ...doc, 
+        feedback,
+        lastEditedBy: currentUser,
+        lastEditedAt: new Date(),
+      } : doc))
     );
   };
 

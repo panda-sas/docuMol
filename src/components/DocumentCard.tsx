@@ -1,20 +1,51 @@
 import { useState } from 'react';
-import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack } from 'lucide-react';
-import { PharmaDocument } from '@/lib/mockData';
+import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock } from 'lucide-react';
+import { PharmaDocument, DocumentComment } from '@/lib/mockData';
 import { TagChip } from './TagChip';
 import { MoleculeCard } from './MoleculeCard';
 import { FeedbackPanel } from './FeedbackPanel';
+import { CommentSection } from './CommentSection';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link } from 'react-router-dom';
 
 interface DocumentCardProps {
   document: PharmaDocument;
   onFeedbackChange?: (feedback: PharmaDocument['feedback']) => void;
+  onDocumentUpdate?: (document: PharmaDocument) => void;
 }
 
-export function DocumentCard({ document, onFeedbackChange }: DocumentCardProps) {
+export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: DocumentCardProps) {
   const [summaryMode, setSummaryMode] = useState<'short' | 'medium'>('short');
 
   const FileIcon = document.fileType === 'ppt' ? Presentation : FileText;
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const formatEditDate = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    if (days === 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 7) return `${days} days ago`;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const handleAddComment = (comment: DocumentComment) => {
+    const updatedFeedback = {
+      ...document.feedback,
+      comments: [...document.feedback.comments, comment],
+    };
+    onFeedbackChange?.(updatedFeedback);
+  };
 
   return (
     <div className="group bg-card rounded-2xl border border-border/50 hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all duration-300 overflow-hidden">
@@ -110,17 +141,44 @@ export function DocumentCard({ document, onFeedbackChange }: DocumentCardProps) 
         </div>
 
         {/* Footer with Feedback */}
-        <div className="mt-6 pt-4 border-t border-border/50 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{document.pageCount} pages</span>
-            <span>•</span>
-            <span className="uppercase">{document.fileType}</span>
+        <div className="mt-6 pt-4 border-t border-border/50">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span>{document.pageCount} pages</span>
+                <span>•</span>
+                <span className="uppercase">{document.fileType}</span>
+              </div>
+              
+              {/* Recently Edited By */}
+              {document.lastEditedBy && document.lastEditedAt && (
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Clock className="w-3 h-3" />
+                  <span>Edited {formatEditDate(document.lastEditedAt)} by</span>
+                  <Avatar className="w-4 h-4">
+                    <AvatarFallback className="text-[8px] bg-navy/10 text-navy">
+                      {getInitials(document.lastEditedBy.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="font-medium text-foreground">{document.lastEditedBy.name}</span>
+                </div>
+              )}
+            </div>
+            
+            <FeedbackPanel
+              feedback={document.feedback}
+              onChange={(feedback) => onFeedbackChange?.(feedback)}
+              compact
+            />
           </div>
-          <FeedbackPanel
-            feedback={document.feedback}
-            onChange={(feedback) => onFeedbackChange?.(feedback)}
-            compact
-          />
+
+          {/* Comment Section */}
+          <div className="pt-3 border-t border-border/30">
+            <CommentSection
+              comments={document.feedback.comments}
+              onAddComment={handleAddComment}
+            />
+          </div>
         </div>
       </div>
     </div>
