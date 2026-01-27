@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { DocumentCard } from '@/components/DocumentCard';
 import { SearchInput } from '@/components/SearchInput';
+import { ResearchAskBar } from '@/components/ResearchAskBar';
 import { mockDocuments, PharmaDocument, currentUser } from '@/lib/mockData';
 import { FileText, TrendingUp, Tag } from 'lucide-react';
 
@@ -39,6 +40,9 @@ const Index = () => {
             Browse and analyze your research documents.
           </p>
         </div>
+
+        {/* Research Ask Bar */}
+        <ResearchAskBar />
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
