@@ -55,7 +55,7 @@ export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
         <div className="flex gap-3 items-end">
           <div className="flex-1">
             <label className="block text-sm font-medium text-foreground mb-2">
-              Ask About Research
+              Ask a question about any document
             </label>
             <Input
               value={question}
