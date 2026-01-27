@@ -99,5 +99,5 @@ o	Downloadable summaries and SMILES files
 
 **URL**: 
 https://documolrep.lovable.app/
-##  This prototype is built using Lovable.
+** This prototype is built using Lovable **
 
