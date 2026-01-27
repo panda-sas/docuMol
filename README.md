@@ -97,7 +97,7 @@ o	REST API for downstream systems
 o	Web dashboard for researchers
 o	Downloadable summaries and SMILES files
 
+This prototype is built using Lovable.
 **URL**: 
 https://documolrep.lovable.app/
-** This prototype is built using Lovable **
 
