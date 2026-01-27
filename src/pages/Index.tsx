@@ -36,7 +36,7 @@ const Index = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Document Dashboard</h1>
           <p className="text-muted-foreground mt-2">
-            Browse and analyze your ingested pharma research documents
+            Browse and analyze your research documents.
           </p>
         </div>
 

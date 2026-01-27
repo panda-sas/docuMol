@@ -99,74 +99,142 @@ export const molecules: Molecule[] = [
 ];
 
 export const sampleTags: DocumentTag[] = [
-  { id: 'tag-1', label: 'IL-6', type: 'protein', description: 'Interleukin-6, a pro-inflammatory cytokine' },
-  { id: 'tag-2', label: 'COX-2', type: 'protein', description: 'Cyclooxygenase-2, enzyme involved in inflammation' },
-  { id: 'tag-3', label: 'NF-κB', type: 'pathway', description: 'Nuclear factor kappa B signaling pathway' },
-  { id: 'tag-4', label: 'HPLC', type: 'method', description: 'High-performance liquid chromatography' },
-  { id: 'tag-5', label: 'Rheumatoid Arthritis', type: 'disease', description: 'Autoimmune inflammatory disease' },
-  { id: 'tag-6', label: 'Mass Spectrometry', type: 'method', description: 'Analytical technique for molecular identification' },
+  {
+    id: 'tag-1',
+    label: 'InhA',
+    type: 'protein',
+    description: 'Enoyl-ACP reductase, a key Mycobacterium tuberculosis enzyme targeted by TB drugs',
+  },
+  {
+    id: 'tag-2',
+    label: 'DprE1',
+    type: 'protein',
+    description: 'Decaprenylphosphoryl-β-D-ribose 2′-epimerase, essential for mycobacterial cell wall synthesis',
+  },
+  {
+    id: 'tag-3',
+    label: 'MDR-TB',
+    type: 'disease',
+    description: 'Multi-drug resistant tuberculosis, resistant to at least isoniazid and rifampicin',
+  },
+  {
+    id: 'tag-4',
+    label: 'HPLC',
+    type: 'method',
+    description: 'High-performance liquid chromatography used for compound purity and quantification',
+  },
+  {
+    id: 'tag-5',
+    label: 'Murine TB Model',
+    type: 'model',
+    description: 'Mouse infection model used for in vivo evaluation of anti-tuberculosis compounds',
+  },
+  {
+    id: 'tag-6',
+    label: 'Mass Spectrometry',
+    type: 'method',
+    description: 'Analytical technique for molecular identification and metabolite profiling',
+  },
 ];
+
 
 export const mockDocuments: PharmaDocument[] = [
   {
     id: 'doc-1',
-    title: 'Anti-inflammatory Drug Efficacy Study',
-    fileName: 'anti_inflammatory_study_2024.pdf',
+    title: 'Preclinical Evaluation of BTZ-043 Against Drug-Resistant Tuberculosis',
+    fileName: 'btz043_preclinical_mdr_tb_2023.pdf',
     fileType: 'pdf',
-    uploadedAt: new Date('2024-01-15'),
-    pageCount: 24,
-    shortSummary: 'Comparative analysis of COX-2 inhibitors in treating rheumatoid arthritis, demonstrating 40% improvement in patient outcomes.',
-    mediumSummary: 'This comprehensive study evaluates the efficacy of selective COX-2 inhibitors compared to traditional NSAIDs in treating rheumatoid arthritis. The research involved 450 patients over 12 months, measuring inflammatory markers including IL-6 and TNF-α. Results showed a 40% improvement in patient-reported outcomes with reduced gastrointestinal side effects. The study also examined molecular binding affinities using computational docking simulations.',
-    tags: [sampleTags[0], sampleTags[1], sampleTags[4]],
-    molecules: [molecules[0], molecules[2]],
+    uploadedAt: new Date('2023-11-12'),
+    pageCount: 28,
+    shortSummary:
+      'Preclinical assessment of the benzothiazinone BTZ-043 demonstrating strong activity against MDR-TB in murine infection models.',
+    mediumSummary:
+      'This study evaluates the preclinical efficacy of BTZ-043, a DprE1 inhibitor, against drug-resistant Mycobacterium tuberculosis strains. In vivo murine TB models showed significant bacterial load reduction in lung tissue after four weeks of treatment. Pharmacokinetic profiling and target engagement analyses support BTZ-043 as a promising lead compound for MDR-TB therapy. Analytical validation was performed using HPLC and mass spectrometry.',
+    tags: [sampleTags[0], sampleTags[1], sampleTags[2], sampleTags[4]],
+    molecules: [molecules[0]],
     pages: [
-      { id: 'p1', pageNumber: 1, text: 'Introduction to anti-inflammatory therapeutics...', images: [] },
-      { id: 'p2', pageNumber: 2, text: 'Methodology and patient selection criteria...', images: [] },
+      {
+        id: 'p1',
+        pageNumber: 1,
+        text: 'Introduction to benzothiazinones and their role in targeting mycobacterial cell wall synthesis...',
+        images: [],
+      },
+      {
+        id: 'p2',
+        pageNumber: 2,
+        text: 'Description of murine TB infection models and dosing regimens...',
+        images: [],
+      },
     ],
-    feedback: { 
-      rating: 4, 
-      preference: 'like', 
+    feedback: {
+      rating: 5,
+      preference: 'like',
       comment: '',
       comments: [
-        { id: 'c1', text: 'Excellent methodology section', author: mockUsers[1], createdAt: new Date('2024-01-16') }
-      ]
+        {
+          id: 'c1',
+          text: 'Strong in vivo efficacy data; recommend progression to lead optimization.',
+          author: mockUsers[1],
+          createdAt: new Date('2023-11-14'),
+        },
+      ],
     },
     status: 'ready',
     lastEditedBy: mockUsers[1],
-    lastEditedAt: new Date('2024-01-18'),
+    lastEditedAt: new Date('2023-11-15'),
   },
   {
     id: 'doc-2',
-    title: 'Novel Drug Delivery Systems Review',
-    fileName: 'drug_delivery_review.pdf',
+    title: 'Targeting DprE1 for Tuberculosis Drug Discovery: A Consortium Review',
+    fileName: 'dpre1_target_review_tbdda.pdf',
     fileType: 'pdf',
-    uploadedAt: new Date('2024-01-20'),
-    pageCount: 18,
-    shortSummary: 'Review of nanoparticle-based drug delivery mechanisms targeting specific cellular pathways.',
-    mediumSummary: 'A systematic review of emerging nanoparticle-based drug delivery systems, focusing on liposomal formulations and polymer conjugates. The paper discusses targeting mechanisms via NF-κB pathway modulation and presents analytical methods including HPLC and mass spectrometry for characterization. Clinical applications in oncology and autoimmune diseases are highlighted.',
-    tags: [sampleTags[2], sampleTags[3], sampleTags[5]],
-    molecules: [molecules[3], molecules[4]],
+    uploadedAt: new Date('2024-01-08'),
+    pageCount: 22,
+    shortSummary:
+      'Consortium review of DprE1 as a validated drug target for tuberculosis, summarizing recent inhibitor classes and challenges.',
+    mediumSummary:
+      'This TB Drug Discovery Accelerator consortium review summarizes progress in targeting DprE1, an essential enzyme in Mycobacterium tuberculosis cell wall biosynthesis. The document covers multiple inhibitor scaffolds, resistance mechanisms, and structure–activity relationships. Analytical approaches including HPLC and mass spectrometry are discussed for compound validation. Implications for MDR-TB drug development are highlighted.',
+    tags: [sampleTags[1], sampleTags[2], sampleTags[3], sampleTags[5]],
+    molecules: [molecules[2], molecules[3]],
     pages: [
-      { id: 'p1', pageNumber: 1, text: 'Overview of nanoparticle technologies...', images: [] },
+      {
+        id: 'p1',
+        pageNumber: 1,
+        text: 'Overview of DprE1 biology and essentiality in M. tuberculosis...',
+        images: [],
+      },
     ],
-    feedback: { rating: 5, preference: null, comment: '', comments: [] },
+    feedback: {
+      rating: 4,
+      preference: null,
+      comment: '',
+      comments: [],
+    },
     status: 'ready',
     lastEditedBy: mockUsers[2],
-    lastEditedAt: new Date('2024-01-22'),
+    lastEditedAt: new Date('2024-01-10'),
   },
   {
     id: 'doc-3',
-    title: 'Caffeine Metabolism Pathways',
-    fileName: 'caffeine_metabolism.pptx',
+    title: 'Pharmacokinetic Profiling of Anti-TB Compounds in Murine Models',
+    fileName: 'pk_profiling_tb_compounds.pptx',
     fileType: 'ppt',
-    uploadedAt: new Date('2024-02-01'),
-    pageCount: 32,
-    shortSummary: 'Presentation on cytochrome P450 enzyme involvement in caffeine metabolism.',
-    mediumSummary: 'Detailed presentation exploring the metabolic pathways of caffeine through cytochrome P450 enzymes, particularly CYP1A2. Covers pharmacokinetic variations across populations, drug-drug interactions, and genetic polymorphisms affecting metabolism rates. Includes analytical methods for plasma caffeine quantification.',
-    tags: [sampleTags[3], sampleTags[5]],
-    molecules: [molecules[1]],
+    uploadedAt: new Date('2024-02-02'),
+    pageCount: 34,
+    shortSummary:
+      'Presentation summarizing pharmacokinetic and exposure data for multiple TB-active compounds in murine models.',
+    mediumSummary:
+      'This presentation reviews pharmacokinetic studies conducted on a panel of TB-active compounds, including BTZ-043 analogs. Data include plasma concentration–time profiles, tissue distribution, and clearance rates in murine TB infection models. Mass spectrometry–based quantification methods were used to support exposure–response analysis.',
+    tags: [sampleTags[4], sampleTags[5]],
+    molecules: [molecules[0], molecules[1]],
     pages: [],
-    feedback: { rating: 0, preference: null, comment: '', comments: [] },
+    feedback: {
+      rating: 0,
+      preference: null,
+      comment: '',
+      comments: [],
+    },
     status: 'ready',
   },
 ];
+
