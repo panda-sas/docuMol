@@ -15,10 +15,16 @@ app.post('/api/ask', (req, res) => {
     return res.status(400).json({ error: 'Question is required' });
   }
 
-  // Static response
-  const answer = 'BTZ-043 showed strong bacterial load reduction in murine TB models.';
+  // Mock response with answer and sources
+  const mockResponse = {
+    answer: 'BTZ-043 showed bactericidal activity in mice.',
+    sources: [
+      { id: 'doc-1', title: 'Preclinical Evaluation of BTZ-043 Against MDR-TB' },
+      { id: 'doc-3', title: 'Murine TB Model Efficacy Studies' }
+    ]
+  };
 
-  res.json({ answer });
+  res.json(mockResponse);
 });
 
 app.listen(PORT, () => {
