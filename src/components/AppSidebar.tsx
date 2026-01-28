@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Upload, Search, FileText, Beaker } from 'lucide-react';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: Home },
+  { path: '/dashboard', label: 'Dashboard', icon: Home },
   { path: '/upload', label: 'Upload', icon: Upload },
   { path: '/search', label: 'Search', icon: Search },
 ];
