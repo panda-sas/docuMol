@@ -1,19 +1,43 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { DocumentCard } from '@/components/DocumentCard';
+import { ResearchAskAssistant } from '@/components/ResearchAskAssistant';
 import { SearchInput } from '@/components/SearchInput';
+import { ResearchAskBar } from '@/components/ResearchAskBar';
+import { MoleculeSketchModal } from '@/components/MoleculeSketchModal';
+import { Button } from '@/components/ui/button';
 import { mockDocuments, PharmaDocument, currentUser } from '@/lib/mockData';
-import { FileText, TrendingUp, Tag } from 'lucide-react';
+import { FileText, TrendingUp, Tag, Beaker } from 'lucide-react';
 
 const Index = () => {
   const [documents, setDocuments] = useState<PharmaDocument[]>(mockDocuments);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAskBar, setShowAskBar] = useState(false);
+  const [showMoleculeModal, setShowMoleculeModal] = useState(false);
 
-  const filteredDocuments = documents.filter((doc) =>
-    doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.shortSummary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.tags.some((tag) => tag.label.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredDocuments = documents.filter((doc) => {
+    const query = searchQuery.toLowerCase();
+    
+    // Check title, summary, and tags
+    const matchesBasic = 
+      doc.title.toLowerCase().includes(query) ||
+      doc.shortSummary.toLowerCase().includes(query) ||
+      doc.tags.some((tag) => tag.label.toLowerCase().includes(query));
+    
+    // Check molecule names
+    const matchesMolecule = doc.molecules.some((mol) => 
+      mol.name.toLowerCase().includes(query)
+    );
+    
+    // Check image-derived text
+    const matchesImageContent = doc.pages.some((page) =>
+      page.images.some((img) => 
+        typeof img !== 'string' && img.derivedText.toLowerCase().includes(query)
+      )
+    );
+    
+    return matchesBasic || matchesMolecule || matchesImageContent;
+  });
 
   const handleFeedbackChange = (docId: string, feedback: PharmaDocument['feedback']) => {
     setDocuments((prev) =>
@@ -33,12 +57,27 @@ const Index = () => {
     <Layout>
       <div className="p-8 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Document Dashboard</h1>
-          <p className="text-muted-foreground mt-2">
-            Browse and analyze your research documents.
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">DocuStore Dashboard</h1>
+            <p className="text-muted-foreground mt-2">
+              Browse and analyze your research documents.
+            </p>
+          </div>
+          <Button
+            onClick={() => setShowAskBar(!showAskBar)}
+            className="bg-teal hover:bg-teal/90 text-white"
+          >
+            Ask Research Assistant
+          </Button>
         </div>
+
+        {/* Research Ask Assistant */}
+        {showAskBar && (
+          <div className="mb-8">
+            <ResearchAskAssistant />
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -72,12 +111,22 @@ const Index = () => {
         </div>
 
         {/* Search */}
-        <div className="mb-8">
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search by title, summary, or tags..."
-          />
+        <div className="mb-8 flex gap-3">
+          <div className="flex-1">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search by title, summary, tags, or molecule name..."
+            />
+          </div>
+          <Button
+            onClick={() => setShowMoleculeModal(true)}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Beaker className="w-4 h-4" />
+            <span className="hidden sm:inline">Molecule</span>
+          </Button>
         </div>
 
         {/* Document Grid */}
@@ -92,6 +141,7 @@ const Index = () => {
                 <DocumentCard
                   document={doc}
                   onFeedbackChange={(feedback) => handleFeedbackChange(doc.id, feedback)}
+                  allDocuments={documents}
                 />
               </div>
             ))
@@ -101,6 +151,13 @@ const Index = () => {
             </div>
           )}
         </div>
+
+        {/* Molecule Sketch Modal */}
+        <MoleculeSketchModal
+          open={showMoleculeModal}
+          onOpenChange={setShowMoleculeModal}
+          onMoleculeSelect={(moleculeName) => setSearchQuery(moleculeName)}
+        />
       </div>
     </Layout>
   );

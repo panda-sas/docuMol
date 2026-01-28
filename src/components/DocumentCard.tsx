@@ -1,21 +1,38 @@
 import { useState } from 'react';
-import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock } from 'lucide-react';
-import { PharmaDocument, DocumentComment } from '@/lib/mockData';
+import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock, Image, Link2, ThumbsUp, ThumbsDown, Send } from 'lucide-react';
+import { PharmaDocument, DocumentComment, DocumentImage, currentUser } from '@/lib/mockData';
 import { TagChip } from './TagChip';
 import { MoleculeCard } from './MoleculeCard';
 import { FeedbackPanel } from './FeedbackPanel';
 import { CommentSection } from './CommentSection';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
+
+interface RelatedDocMatch {
+  doc: PharmaDocument;
+  matchedItems: {
+    molecules: string[];
+    tags: string[];
+  };
+  firstSharedItem?: {
+    type: 'molecule' | 'protein' | 'pathway';
+    name: string;
+  };
+}
 
 interface DocumentCardProps {
   document: PharmaDocument;
   onFeedbackChange?: (feedback: PharmaDocument['feedback']) => void;
   onDocumentUpdate?: (document: PharmaDocument) => void;
+  allDocuments?: PharmaDocument[];
 }
 
-export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: DocumentCardProps) {
+export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate, allDocuments = [] }: DocumentCardProps) {
   const [summaryMode, setSummaryMode] = useState<'short' | 'medium'>('short');
+  const [quickFeedback, setQuickFeedback] = useState<'like' | 'dislike' | null>(null);
+  const [feedbackComment, setFeedbackComment] = useState('');
+  const [feedbackComments, setFeedbackComments] = useState<Array<{ id: string; text: string; timestamp: Date }>>([]);
 
   const FileIcon = document.fileType === 'ppt' ? Presentation : FileText;
 
@@ -46,6 +63,63 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
     };
     onFeedbackChange?.(updatedFeedback);
   };
+
+  const getMatchedImages = (): DocumentImage[] => {
+    const matched: DocumentImage[] = [];
+    document.pages.forEach((page) => {
+      page.images.forEach((img) => {
+        if (typeof img !== 'string' && img.matchedQuery) {
+          matched.push(img);
+        }
+      });
+    });
+    return matched;
+  };
+
+  const findRelatedDocuments = (): RelatedDocMatch[] => {
+    const currentMoleculeIds = new Set(document.molecules.map((m) => m.id));
+    const currentProteinPathwayTagIds = new Set(
+      document.tags
+        .filter((tag) => tag.type === 'protein' || tag.type === 'pathway')
+        .map((tag) => tag.id)
+    );
+
+    const relatedDocs = allDocuments
+      .filter((doc) => doc.id !== document.id) // Don't include self
+      .map((doc) => {
+        const matchedMolecules = doc.molecules
+          .filter((mol) => currentMoleculeIds.has(mol.id))
+          .map((mol) => mol.name);
+
+        const matchedTags = doc.tags
+          .filter((tag) => currentProteinPathwayTagIds.has(tag.id))
+          .map((tag) => ({ name: tag.label, type: tag.type as 'protein' | 'pathway' }));
+
+        // Determine the first shared item
+        let firstSharedItem: RelatedDocMatch['firstSharedItem'] | undefined;
+        if (matchedMolecules.length > 0) {
+          firstSharedItem = { type: 'molecule', name: matchedMolecules[0] };
+        } else if (matchedTags.length > 0) {
+          firstSharedItem = { type: matchedTags[0].type, name: matchedTags[0].name };
+        }
+
+        return {
+          doc,
+          matchedItems: {
+            molecules: matchedMolecules,
+            tags: matchedTags.map((t) => t.name),
+          },
+          firstSharedItem,
+        };
+      })
+      .filter((match) => match.matchedItems.molecules.length > 0 || match.matchedItems.tags.length > 0)
+      .slice(0, 3); // Max 3 related documents
+
+    return relatedDocs;
+  };
+
+  const matchedImages = getMatchedImages();
+  const relatedDocuments = findRelatedDocuments();
 
   return (
     <div className="group bg-card rounded-2xl border border-border/50 hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all duration-300 overflow-hidden">
@@ -119,6 +193,26 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
               </p>
             </div>
 
+            {/* Image-Derived Content */}
+            {matchedImages.length > 0 && (
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-100 border border-yellow-300 text-xs font-medium text-yellow-800">
+                    <Image className="w-3 h-3" />
+                    Matched in Image
+                  </span>
+                </div>
+                {matchedImages.map((img) => (
+                  <div key={img.id} className="p-3 rounded bg-gray-50 border border-gray-200">
+                    <p className="text-xs font-medium text-gray-700 mb-2">{img.caption}</p>
+                    <p className="text-xs font-mono text-gray-600 bg-gray-100 p-2 rounded break-all">
+                      {img.derivedText}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
               {document.tags.map((tag) => (
@@ -144,12 +238,6 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
         <div className="mt-6 pt-4 border-t border-border/50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span>{document.pageCount} pages</span>
-                <span>•</span>
-                <span className="uppercase">{document.fileType}</span>
-              </div>
-              
               {/* Recently Edited By */}
               {document.lastEditedBy && document.lastEditedAt && (
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -178,6 +266,150 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
               comments={document.feedback.comments}
               onAddComment={handleAddComment}
             />
+          </div>
+
+          {/* Related Documents Section */}
+          {relatedDocuments.length > 0 && (
+            <div className="pt-4 border-t border-border/30">
+              <div className="flex items-center gap-2 mb-3">
+                <Link2 className="w-4 h-4 text-muted-foreground" />
+                <h4 className="text-sm font-semibold text-foreground">Related Documents</h4>
+                <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                  {relatedDocuments.length}
+                </span>
+              </div>
+              <div className="space-y-3">
+                {relatedDocuments.map((match) => (
+                  <div
+                    key={match.doc.id}
+                    className="p-3 rounded-lg border border-border/30 bg-muted/30 hover:border-teal/30 hover:bg-teal/5 transition-all"
+                  >
+                    <Link to={`/document/${match.doc.id}`} className="group/related block">
+                      <h5 className="text-sm font-medium text-foreground group-hover/related:text-teal transition-colors line-clamp-2 mb-1">
+                        {match.doc.title}
+                      </h5>
+                    </Link>
+                    {match.firstSharedItem && (
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Shared {match.firstSharedItem.type === 'molecule' ? 'molecule' : match.firstSharedItem.type}:{' '}
+                        <span className="font-medium text-foreground">{match.firstSharedItem.name}</span>
+                      </p>
+                    )}
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                      {match.doc.shortSummary}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {match.matchedItems.molecules.map((molName) => (
+                        <span
+                          key={`mol-${molName}`}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-navy/10 text-navy border border-navy/20"
+                        >
+                          {molName}
+                        </span>
+                      ))}
+                      {match.matchedItems.tags.map((tagName) => (
+                        <span
+                          key={`tag-${tagName}`}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-violet/10 text-violet-700 border border-violet/20"
+                        >
+                          {tagName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quick Feedback Section */}
+          <div className="pt-4 border-t border-border/30">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <p className="text-xs font-medium text-muted-foreground">Quick feedback</p>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setQuickFeedback(quickFeedback === 'like' ? null : 'like')}
+                  className={`p-1.5 rounded-lg transition-all ${
+                    quickFeedback === 'like'
+                      ? 'bg-teal text-white'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                  title="Like"
+                >
+                  <ThumbsUp className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setQuickFeedback(quickFeedback === 'dislike' ? null : 'dislike')}
+                  className={`p-1.5 rounded-lg transition-all ${
+                    quickFeedback === 'dislike'
+                      ? 'bg-rose-500 text-white'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                  title="Dislike"
+                >
+                  <ThumbsDown className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Comment Input */}
+            <div className="flex items-center gap-2">
+              <Input
+                type="text"
+                placeholder="Add a quick note..."
+                value={feedbackComment}
+                onChange={(e) => setFeedbackComment(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && feedbackComment.trim()) {
+                    const newComment = {
+                      id: Date.now().toString(),
+                      text: feedbackComment,
+                      timestamp: new Date(),
+                    };
+                    setFeedbackComments([...feedbackComments, newComment]);
+                    setFeedbackComment('');
+                  }
+                }}
+                className="h-8 text-xs"
+              />
+              <button
+                onClick={() => {
+                  if (feedbackComment.trim()) {
+                    const newComment = {
+                      id: Date.now().toString(),
+                      text: feedbackComment,
+                      timestamp: new Date(),
+                    };
+                    setFeedbackComments([...feedbackComments, newComment]);
+                    setFeedbackComment('');
+                  }
+                }}
+                disabled={!feedbackComment.trim()}
+                className="p-1.5 rounded-lg bg-navy/10 text-navy hover:bg-navy/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Comments List */}
+            {feedbackComments.length > 0 && (
+              <div className="mt-3 space-y-2 max-h-32 overflow-y-auto">
+                {feedbackComments.map((comment) => (
+                  <div key={comment.id} className="p-2 rounded-lg bg-muted/30 text-xs">
+                    <div className="flex items-baseline gap-1 mb-1">
+                      <span className="font-medium text-foreground">You said:</span>
+                      <span className="text-muted-foreground">
+                        {comment.timestamp.toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground">{comment.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Upload, Search, FileText, Beaker } from 'lucide-react';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: Home },
+  { path: '/dashboard', label: 'Dashboard', icon: Home },
   { path: '/upload', label: 'Upload', icon: Upload },
   { path: '/search', label: 'Search', icon: Search },
 ];
@@ -18,7 +18,7 @@ export function AppSidebar() {
           <div className="p-2 rounded-xl bg-teal text-white">
             <Beaker className="w-5 h-5" />
           </div>
-          <span className="text-xl font-semibold text-sidebar-foreground">DocuMol</span>
+          <span className="text-xl font-semibold text-sidebar-foreground">DocuStore</span>
         </Link>
       </div>
 
@@ -50,10 +50,7 @@ export function AppSidebar() {
       <div className="p-4 border-t border-sidebar-border">
         <div className="px-4 py-3">
           <p className="text-xs text-sidebar-foreground/50">
-            Pharma Research Assistant
-          </p>
-          <p className="text-xs text-sidebar-foreground/30 mt-0.5">
-            v1.0.0
+            Research Assistant v1
           </p>
         </div>
       </div>
