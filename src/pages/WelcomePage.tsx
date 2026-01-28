@@ -1,6 +1,33 @@
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Beaker, Upload, Zap, Search, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: 'easeOut',
+    },
+  },
+};
 
 export default function WelcomePage() {
   return (
@@ -51,9 +78,18 @@ export default function WelcomePage() {
 
       {/* Features Section */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {/* Feature 1 */}
-          <div className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all">
+          <motion.div
+            className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all"
+            variants={cardVariants}
+          >
             <div className="w-12 h-12 rounded-xl bg-navy/10 text-navy flex items-center justify-center">
               <Upload className="w-6 h-6" />
             </div>
@@ -61,10 +97,13 @@ export default function WelcomePage() {
             <p className="text-muted-foreground">
               Support for PDF, Word, and PowerPoint formats. Automatically processed and indexed for instant search.
             </p>
-          </div>
+          </motion.div>
 
           {/* Feature 2 */}
-          <div className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all">
+          <motion.div
+            className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all"
+            variants={cardVariants}
+          >
             <div className="w-12 h-12 rounded-xl bg-teal/10 text-teal flex items-center justify-center">
               <Zap className="w-6 h-6" />
             </div>
@@ -72,10 +111,13 @@ export default function WelcomePage() {
             <p className="text-muted-foreground">
               AI-powered extraction of molecular structures, proteins, pathways, and auto-generated summaries.
             </p>
-          </div>
+          </motion.div>
 
           {/* Feature 3 */}
-          <div className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all">
+          <motion.div
+            className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all"
+            variants={cardVariants}
+          >
             <div className="w-12 h-12 rounded-xl bg-violet/10 text-violet-600 flex items-center justify-center">
               <Search className="w-6 h-6" />
             </div>
@@ -83,8 +125,8 @@ export default function WelcomePage() {
             <p className="text-muted-foreground">
               Semantic search by molecule, protein, or SMILES. Find related documents instantly.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* CTA Section */}
