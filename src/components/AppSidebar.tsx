@@ -50,10 +50,7 @@ export function AppSidebar() {
       <div className="p-4 border-t border-sidebar-border">
         <div className="px-4 py-3">
           <p className="text-xs text-sidebar-foreground/50">
-            Pharma Research Assistant
-          </p>
-          <p className="text-xs text-sidebar-foreground/30 mt-0.5">
-            v1.0.0
+            Research Assistant v1
           </p>
         </div>
       </div>
