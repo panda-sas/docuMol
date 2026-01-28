@@ -129,6 +129,7 @@ const Index = () => {
                 <DocumentCard
                   document={doc}
                   onFeedbackChange={(feedback) => handleFeedbackChange(doc.id, feedback)}
+                  allDocuments={documents}
                 />
               </div>
             ))

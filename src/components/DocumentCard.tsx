@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock, Image } from 'lucide-react';
+import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock, Image, Link2 } from 'lucide-react';
 import { PharmaDocument, DocumentComment, DocumentImage } from '@/lib/mockData';
 import { TagChip } from './TagChip';
 import { MoleculeCard } from './MoleculeCard';
@@ -8,13 +8,22 @@ import { CommentSection } from './CommentSection';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link } from 'react-router-dom';
 
+interface RelatedDocMatch {
+  doc: PharmaDocument;
+  matchedItems: {
+    molecules: string[];
+    tags: string[];
+  };
+}
+
 interface DocumentCardProps {
   document: PharmaDocument;
   onFeedbackChange?: (feedback: PharmaDocument['feedback']) => void;
   onDocumentUpdate?: (document: PharmaDocument) => void;
+  allDocuments?: PharmaDocument[];
 }
 
-export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: DocumentCardProps) {
+export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate, allDocuments = [] }: DocumentCardProps) {
   const [summaryMode, setSummaryMode] = useState<'short' | 'medium'>('short');
 
   const FileIcon = document.fileType === 'ppt' ? Presentation : FileText;
@@ -59,7 +68,41 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
     return matched;
   };
 
+  const findRelatedDocuments = (): RelatedDocMatch[] => {
+    const currentMoleculeIds = new Set(document.molecules.map((m) => m.id));
+    const currentProteinPathwayTagIds = new Set(
+      document.tags
+        .filter((tag) => tag.type === 'protein' || tag.type === 'pathway')
+        .map((tag) => tag.id)
+    );
+
+    const relatedDocs = allDocuments
+      .filter((doc) => doc.id !== document.id) // Don't include self
+      .map((doc) => {
+        const matchedMolecules = doc.molecules
+          .filter((mol) => currentMoleculeIds.has(mol.id))
+          .map((mol) => mol.name);
+
+        const matchedTags = doc.tags
+          .filter((tag) => currentProteinPathwayTagIds.has(tag.id))
+          .map((tag) => tag.label);
+
+        return {
+          doc,
+          matchedItems: {
+            molecules: matchedMolecules,
+            tags: matchedTags,
+          },
+        };
+      })
+      .filter((match) => match.matchedItems.molecules.length > 0 || match.matchedItems.tags.length > 0)
+      .slice(0, 3); // Max 3 related documents
+
+    return relatedDocs;
+  };
+
   const matchedImages = getMatchedImages();
+  const relatedDocuments = findRelatedDocuments();
 
   return (
     <div className="group bg-card rounded-2xl border border-border/50 hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all duration-300 overflow-hidden">
@@ -207,6 +250,54 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
               onAddComment={handleAddComment}
             />
           </div>
+
+          {/* Related Documents Section */}
+          {relatedDocuments.length > 0 && (
+            <div className="pt-4 border-t border-border/30">
+              <div className="flex items-center gap-2 mb-3">
+                <Link2 className="w-4 h-4 text-muted-foreground" />
+                <h4 className="text-sm font-semibold text-foreground">Related Documents</h4>
+                <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                  {relatedDocuments.length}
+                </span>
+              </div>
+              <div className="space-y-3">
+                {relatedDocuments.map((match) => (
+                  <div
+                    key={match.doc.id}
+                    className="p-3 rounded-lg border border-border/30 bg-muted/30 hover:border-teal/30 hover:bg-teal/5 transition-all"
+                  >
+                    <Link to={`/document/${match.doc.id}`} className="group/related block">
+                      <h5 className="text-sm font-medium text-foreground group-hover/related:text-teal transition-colors line-clamp-2 mb-1">
+                        {match.doc.title}
+                      </h5>
+                    </Link>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                      {match.doc.shortSummary}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {match.matchedItems.molecules.map((molName) => (
+                        <span
+                          key={`mol-${molName}`}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-navy/10 text-navy border border-navy/20"
+                        >
+                          {molName}
+                        </span>
+                      ))}
+                      {match.matchedItems.tags.map((tagName) => (
+                        <span
+                          key={`tag-${tagName}`}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-violet/10 text-violet-700 border border-violet/20"
+                        >
+                          {tagName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
