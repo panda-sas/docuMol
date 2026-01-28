@@ -37,23 +37,26 @@ export default function ResearchAskAssistant() {
   };
 
   return (
-    <div className="bg-white border rounded-lg p-6 shadow-sm mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Ask a question about any document
-      </label>
+    <div className="bg-yellow-50 border border-yellow-200 rounded-xl shadow-md p-6 mb-6">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-xl">💡</span>
+        <label className="text-sm font-semibold text-gray-800">
+          Ask a question about any document
+        </label>
+      </div>
 
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-2 mb-4">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about TB research..."
-          className="flex-1 px-4 py-2 border rounded text-sm"
+          className="flex-1 px-4 py-2 border border-yellow-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <button
           onClick={() => handleAsk()}
           disabled={loading}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded text-sm"
+          className="bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
         >
           {loading ? "Thinking..." : "Ask"}
         </button>
@@ -64,7 +67,7 @@ export default function ResearchAskAssistant() {
           <button
             key={q}
             onClick={() => handleChipClick(q)}
-            className="text-sm bg-gray-200 hover:bg-gray-300 rounded-full px-3 py-1"
+            className="text-xs px-3 py-1 border border-yellow-300 bg-white hover:bg-yellow-100 text-gray-700 rounded-full transition font-medium"
           >
             {q}
           </button>
@@ -72,12 +75,12 @@ export default function ResearchAskAssistant() {
       </div>
 
       {loading && (
-        <p className="text-gray-500 text-sm">Thinking…</p>
+        <p className="text-gray-600 text-sm">Thinking…</p>
       )}
 
       {!loading && answer && (
-        <div className="mt-3 p-3 bg-gray-50 border rounded text-sm text-gray-800">
-          <strong>Answer:</strong> {answer}
+        <div className="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-900 font-mono">
+          <strong className="block mb-2 text-gray-800">Answer:</strong> {answer}
         </div>
       )}
     </div>
