@@ -10,6 +10,7 @@ interface ResearchAskBarProps {
 export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState<string | null>(null);
+  const [sources, setSources] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,6 +20,7 @@ export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
     setLoading(true);
     setError(null);
     setAnswer(null);
+    setSources([]);
 
     try {
       const response = await fetch('/api/ask', {
@@ -33,6 +35,7 @@ export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
 
       const data = await response.json();
       setAnswer(data.answer);
+      setSources(data.sources || []);
       onAnswerReceived?.(data.answer);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to get answer');
@@ -92,21 +95,17 @@ export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
           </div>
         )}
 
-        {/* Answer Display */}
-        {answer && (
-          <div className="mt-4 p-4 rounded-lg bg-muted/50 border border-border/50">
-            <p className="text-sm font-medium text-foreground mb-2">Answer:</p>
-            <p className="text-sm text-foreground/90 leading-relaxed">{answer}</p>
+        {/* Loading State */}
+        {loading && (
+          <div className="mt-4 p-4 bg-gray-50 rounded border text-sm text-gray-800">
+            <strong>Thinking…</strong>
           </div>
         )}
 
-        {/* Loading State */}
-        {loading && !answer && (
-          <div className="mt-4 p-4 rounded-lg bg-muted/50 border border-border/50">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Analyzing your question…
-            </div>
+        {/* Answer Display */}
+        {answer && !loading && (
+          <div className="mt-4 p-4 bg-gray-50 rounded border text-sm text-gray-800">
+            <strong>Answer:</strong> {answer}
           </div>
         )}
       </div>
