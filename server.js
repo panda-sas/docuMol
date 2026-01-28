@@ -9,10 +9,10 @@ app.use(express.json());
 
 // API endpoint for research questions
 app.post('/api/ask', (req, res) => {
-  const { question } = req.body;
+  const { query } = req.body;
 
-  if (!question) {
-    return res.status(400).json({ error: 'Question is required' });
+  if (!query) {
+    return res.status(400).json({ error: 'Query is required' });
   }
 
   // Mock response with answer and sources

@@ -20,39 +20,25 @@ const exampleQuestions = [
 
 export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
   const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState<string | null>(null);
+  const [answer, setAnswer] = useState('');
   const [sources, setSources] = useState<DocumentSource[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleAsk = async () => {
-    if (!question.trim()) return;
-
     setLoading(true);
-    setError(null);
-    setAnswer(null);
+    setAnswer('');
     setSources([]);
 
-    try {
-      const response = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question }),
-      });
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      body: JSON.stringify({ query: question }),
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-      setAnswer(data.answer);
-      setSources(data.sources || []);
-      onAnswerReceived?.(data.answer);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to get answer');
-    } finally {
-      setLoading(false);
-    }
+    const data = await res.json();
+    setAnswer(data.answer);
+    setSources(data.sources || []);
+    setLoading(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -112,37 +98,25 @@ export function ResearchAskBar({ onAnswerReceived }: ResearchAskBarProps) {
           ))}
         </div>
 
-        {/* Error State */}
-        {error && (
-          <div className="mt-4 p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm">
-            Error: {error}
-          </div>
-        )}
+        {loading && <p className="mt-4 text-sm text-gray-500">Thinking…</p>}
 
-        {/* Loading State */}
-        {loading && (
-          <div className="mt-4 p-4 bg-gray-50 rounded border text-sm text-gray-800">
-            <strong>Thinking…</strong>
-          </div>
-        )}
-
-        {/* Answer Display */}
-        {answer && !loading && (
+        {answer && (
           <div className="mt-4 p-4 bg-gray-50 rounded border text-sm text-gray-800">
             <strong>Answer:</strong> {answer}
+
             {sources.length > 0 && (
-              <>
-                <p className="mt-2 text-sm text-gray-600">
+              <div className="mt-2">
+                <p className="text-sm text-gray-600">
                   Based on {sources.length} document{sources.length > 1 ? 's' : ''}:
                 </p>
                 <ul className="list-disc list-inside text-sm text-blue-600 underline">
-                  {sources.map(doc => (
+                  {sources.map((doc) => (
                     <li key={doc.id}>
-                      <a href={`/document/${doc.id}`}>{doc.title}</a>
+                      <a href={`/documents/${doc.id}`}>{doc.title}</a>
                     </li>
                   ))}
                 </ul>
-              </>
+              </div>
             )}
           </div>
         )}
