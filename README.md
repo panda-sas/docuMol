@@ -11,7 +11,7 @@ Create a central intelligence layer that opens these documents through automated
 •	Data Scientists – Use structured knowledge for model training and hypothesis validation.
 •	AI Engineers – Integrate extracted content into NLP/LLM workflows.
 •	R&D Analysts – Surface old results, molecular trials, or experimental outcomes.
-•	Product Managers – Trace past initiatives or competitive compound research.
+•	Project & Portfolio Managers – Trace past initiatives or competitive compound research.
 
 ## Core Features
 •	Multi-format ingestion (PDF, PPT, Word, TXT)
