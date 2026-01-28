@@ -97,8 +97,8 @@ o	REST API for downstream systems
 o	Web dashboard for researchers
 o	Downloadable summaries and SMILES files
 
-## Advanced AI Features
-## Ask Research Assistant
+Advanced AI Features
+Ask Research Assistant
 1. Interactive Q&A interface for natural language queries.
 Users can ask questions like:
 - “What models was BTZ-043 tested on?”
@@ -106,27 +106,26 @@ Users can ask questions like:
 - “Show me molecules effective against MDR-TB.”
 
 System returns relevant answers by matching user queries against extracted document content (titles, tags, molecules, metadata, summaries).
-- *Value:* Removes search friction, especially for non-technical users.
-- *Application:* Rapid navigation through document corpus for R&D teams.
-## Semantic Molecule Matching
+- Value: Removes search friction, especially for non-technical users.
+- Application: Rapid navigation through document corpus for R&D teams.
+Semantic Molecule Matching
 2. Search from molecule-derived images using SMILES linkage.
 Users can upload or select a molecule image; system identifies similar molecules and retrieves documents where they appear, directly or in text/structure.
 
-- *Value:* Bridges image content and molecular informatics.
-- *Application:* Allows chemists to find relevant studies even from visual cues (e.g., diagrams from old scanned slides).
-## Document Similarity & Clustering
+- Value: Bridges image content and molecular informatics.
+- Application: Allows chemists to find relevant studies even from visual cues (e.g., diagrams from old scanned slides).
+Document Similarity & Clustering
 3. Automatic suggestion of “Related Documents.”
 Uses shared tags (proteins, pathways), molecules, or experimental context to suggest similar documents when viewing any research asset.
 
-- *Value:* Surfaces hidden linkages across studies.
-- *Application:* Encourages knowledge reuse and cross-team collaboration.
-## Visual + Interactive UI Features
+-Value: Surfaces hidden linkages across studies.
+- Application: Encourages knowledge reuse and cross-team collaboration.
+Visual + Interactive UI Features
 4. Search bar with predictive chips + mock answer previews.
 Implemented directly in dashboard view. Users can explore predefined questions and simulate AI responses without backend integration.
 
-- *Value:* Demonstrates intelligence upfront.
-- *Application:* Early-stage validation and stakeholder demo readiness.
-<img width="468" height="622" alt="image" src="https://github.com/user-attachments/assets/2c969be1-aa0d-411c-a77c-45714e28ca2a" />
+- Value: Demonstrates intelligence upfront.
+- Application: Early-stage validation and stakeholder demo readiness.
 
 
 This prototype is built using Lovable.
