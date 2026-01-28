@@ -12,11 +12,19 @@ export interface DocumentTag {
   description?: string;
 }
 
+export interface DocumentImage {
+  id: string;
+  caption: string;
+  derivedText: string;
+  source: 'image';
+  matchedQuery: boolean;
+}
+
 export interface DocumentPage {
   id: string;
   pageNumber: number;
   text: string;
-  images: string[];
+  images: (string | DocumentImage)[];
 }
 
 export interface User {
@@ -235,6 +243,45 @@ export const mockDocuments: PharmaDocument[] = [
       comments: [],
     },
     status: 'ready',
+  },
+  {
+    id: 'doc-4',
+    title: 'Molecular Structure Analysis – TB Compounds',
+    fileName: 'molecular_structures_tb.pdf',
+    fileType: 'pdf',
+    uploadedAt: new Date('2024-03-15'),
+    pageCount: 12,
+    shortSummary:
+      'Analysis of molecular structures and SMILES representations of TB-active compounds including caffeine-derived scaffolds.',
+    mediumSummary:
+      'This document presents a comprehensive analysis of molecular structures found in TB research documents. Using image-derived semantic search, structures were extracted and matched to database compounds. The analysis includes SMILES notation, molecular formulas, and structure-activity relationships for compounds of interest.',
+    tags: [sampleTags[1], sampleTags[5]],
+    molecules: [molecules[1]],
+    pages: [
+      {
+        id: 'p1',
+        pageNumber: 1,
+        text: 'Molecular structure extraction from document images...',
+        images: [
+          {
+            id: 'img1',
+            caption: 'Extracted structure: Caffeine',
+            derivedText: 'SMILES: CN1C=NC2=C1C(=O)N(C(=O)N2C)C',
+            source: 'image',
+            matchedQuery: true,
+          },
+        ],
+      },
+    ],
+    feedback: {
+      rating: 4,
+      preference: 'like',
+      comment: '',
+      comments: [],
+    },
+    status: 'ready',
+    lastEditedBy: mockUsers[0],
+    lastEditedAt: new Date('2024-03-16'),
   },
 ];
 

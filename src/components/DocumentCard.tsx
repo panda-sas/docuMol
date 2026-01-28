@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock } from 'lucide-react';
-import { PharmaDocument, DocumentComment } from '@/lib/mockData';
+import { FileText, Presentation, ChevronDown, ChevronUp, Calendar, FileStack, Clock, Image } from 'lucide-react';
+import { PharmaDocument, DocumentComment, DocumentImage } from '@/lib/mockData';
 import { TagChip } from './TagChip';
 import { MoleculeCard } from './MoleculeCard';
 import { FeedbackPanel } from './FeedbackPanel';
@@ -46,6 +46,20 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
     };
     onFeedbackChange?.(updatedFeedback);
   };
+
+  const getMatchedImages = (): DocumentImage[] => {
+    const matched: DocumentImage[] = [];
+    document.pages.forEach((page) => {
+      page.images.forEach((img) => {
+        if (typeof img !== 'string' && img.matchedQuery) {
+          matched.push(img);
+        }
+      });
+    });
+    return matched;
+  };
+
+  const matchedImages = getMatchedImages();
 
   return (
     <div className="group bg-card rounded-2xl border border-border/50 hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all duration-300 overflow-hidden">
@@ -118,6 +132,26 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
                 {summaryMode === 'short' ? document.shortSummary : document.mediumSummary}
               </p>
             </div>
+
+            {/* Image-Derived Content */}
+            {matchedImages.length > 0 && (
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-100 border border-yellow-300 text-xs font-medium text-yellow-800">
+                    <Image className="w-3 h-3" />
+                    Matched in Image
+                  </span>
+                </div>
+                {matchedImages.map((img) => (
+                  <div key={img.id} className="p-3 rounded bg-gray-50 border border-gray-200">
+                    <p className="text-xs font-medium text-gray-700 mb-2">{img.caption}</p>
+                    <p className="text-xs font-mono text-gray-600 bg-gray-100 p-2 rounded break-all">
+                      {img.derivedText}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
