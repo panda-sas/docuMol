@@ -3,12 +3,14 @@ import { Layout } from '@/components/Layout';
 import { DocumentCard } from '@/components/DocumentCard';
 import { SearchInput } from '@/components/SearchInput';
 import { ResearchAskBar } from '@/components/ResearchAskBar';
+import { Button } from '@/components/ui/button';
 import { mockDocuments, PharmaDocument, currentUser } from '@/lib/mockData';
 import { FileText, TrendingUp, Tag } from 'lucide-react';
 
 const Index = () => {
   const [documents, setDocuments] = useState<PharmaDocument[]>(mockDocuments);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAskBar, setShowAskBar] = useState(false);
 
   const filteredDocuments = documents.filter((doc) =>
     doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -34,15 +36,23 @@ const Index = () => {
     <Layout>
       <div className="p-8 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Document Dashboard</h1>
-          <p className="text-muted-foreground mt-2">
-            Browse and analyze your research documents.
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Document Dashboard</h1>
+            <p className="text-muted-foreground mt-2">
+              Browse and analyze your research documents.
+            </p>
+          </div>
+          <Button
+            onClick={() => setShowAskBar(!showAskBar)}
+            className="bg-teal hover:bg-teal/90 text-white"
+          >
+            Ask Research Assistant
+          </Button>
         </div>
 
         {/* Research Ask Bar */}
-        <ResearchAskBar />
+        {showAskBar && <ResearchAskBar />}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
