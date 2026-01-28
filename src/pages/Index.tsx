@@ -13,11 +13,29 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAskBar, setShowAskBar] = useState(false);
 
-  const filteredDocuments = documents.filter((doc) =>
-    doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.shortSummary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.tags.some((tag) => tag.label.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredDocuments = documents.filter((doc) => {
+    const query = searchQuery.toLowerCase();
+    
+    // Check title, summary, and tags
+    const matchesBasic = 
+      doc.title.toLowerCase().includes(query) ||
+      doc.shortSummary.toLowerCase().includes(query) ||
+      doc.tags.some((tag) => tag.label.toLowerCase().includes(query));
+    
+    // Check molecule names
+    const matchesMolecule = doc.molecules.some((mol) => 
+      mol.name.toLowerCase().includes(query)
+    );
+    
+    // Check image-derived text
+    const matchesImageContent = doc.pages.some((page) =>
+      page.images.some((img) => 
+        typeof img !== 'string' && img.derivedText.toLowerCase().includes(query)
+      )
+    );
+    
+    return matchesBasic || matchesMolecule || matchesImageContent;
+  });
 
   const handleFeedbackChange = (docId: string, feedback: PharmaDocument['feedback']) => {
     setDocuments((prev) =>
