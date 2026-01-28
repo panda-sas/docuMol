@@ -52,10 +52,12 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Research Ask */}
-        <div className="mb-8">
-          <ResearchAskAssistant />
-        </div>
+        {/* Research Ask Assistant */}
+        {showAskBar && (
+          <div className="mb-8">
+            <ResearchAskAssistant />
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
