@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { DocumentCard } from '@/components/DocumentCard';
+import { ResearchAskAssistant } from '@/components/ResearchAskAssistant';
 import { SearchInput } from '@/components/SearchInput';
 import { ResearchAskBar } from '@/components/ResearchAskBar';
 import { Button } from '@/components/ui/button';
@@ -51,8 +52,10 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Research Ask Bar */}
-        {showAskBar && <ResearchAskBar />}
+        {/* Research Ask */}
+        <div className="mb-8">
+          <ResearchAskAssistant />
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

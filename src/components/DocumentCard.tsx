@@ -144,7 +144,6 @@ export function DocumentCard({ document, onFeedbackChange, onDocumentUpdate }: D
         <div className="mt-6 pt-4 border-t border-border/50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              
               {/* Recently Edited By */}
               {document.lastEditedBy && document.lastEditedAt && (
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
