@@ -133,5 +133,5 @@ Implemented directly in dashboard view. Users can explore predefined questions a
 
 This prototype is built using Lovable.
 **URL**: 
-https://documolrep.lovable.app/
+https://documol.lovable.app
 
