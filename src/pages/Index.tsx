@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { DocumentCard } from '@/components/DocumentCard';
+import { ResearchAskAssistant } from '@/components/ResearchAskAssistant';
 import { SearchInput } from '@/components/SearchInput';
 import { mockDocuments, PharmaDocument, currentUser } from '@/lib/mockData';
 import { FileText, TrendingUp, Tag } from 'lucide-react';
@@ -38,6 +39,11 @@ const Index = () => {
           <p className="text-muted-foreground mt-2">
             Browse and analyze your research documents.
           </p>
+        </div>
+
+        {/* Research Ask */}
+        <div className="mb-8">
+          <ResearchAskAssistant />
         </div>
 
         {/* Stats */}
