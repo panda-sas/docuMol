@@ -22,14 +22,20 @@ export function AskAssistant() {
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleAsk = () => {
+  const handleAsk = (customInput?: string) => {
+    const query = customInput || input;
     setLoading(true);
     setAnswer('');
 
     setTimeout(() => {
-      setAnswer(mockAnswers[input] || "No answer available for that question yet.");
+      setAnswer(mockAnswers[query] || "Sorry, I don't have that answer yet.");
       setLoading(false);
     }, 1500);
+  };
+
+  const handleChipClick = (question: string) => {
+    setInput(question);
+    handleAsk(question);
   };
 
   return (
@@ -50,7 +56,7 @@ export function AskAssistant() {
         {exampleQuestions.map((q) => (
           <button
             key={q}
-            onClick={() => setInput(q)}
+            onClick={() => handleChipClick(q)}
             className="text-sm bg-gray-200 hover:bg-gray-300 rounded-full px-3 py-1 mr-2 mb-2"
           >
             {q}
