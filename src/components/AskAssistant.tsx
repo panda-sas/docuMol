@@ -9,12 +9,9 @@ const exampleQuestions = [
 
 // Mock answers for demonstration
 const mockAnswers: Record<string, string> = {
-  "What models was BTZ-043 tested on?":
-    "BTZ-043 was tested in murine infection models using BALB/c mice to assess efficacy against MDR-TB strains.",
-  "List all studies targeting InhA":
-    "Studies targeting InhA include BTZ-043 preclinical evaluation, and analog screening projects involving isoniazid resistance pathways.",
-  "Show me molecules effective against MDR-TB":
-    "BTZ-043 and other benzothiazinone derivatives demonstrated activity against MDR-TB in murine models.",
+  "What models was BTZ-043 tested on?": "BTZ-043 was tested in murine models using BALB/c mice.",
+  "List all studies targeting InhA": "BTZ-043 and related analog studies target InhA.",
+  "Show me molecules effective against MDR-TB": "BTZ-043 showed high efficacy in MDR-TB models.",
 };
 
 export default function ResearchAskAssistant() {
@@ -28,14 +25,15 @@ export default function ResearchAskAssistant() {
     setAnswer('');
 
     setTimeout(() => {
-      setAnswer(mockAnswers[query] || "Sorry, I don't have an answer for that yet.");
+      const result = mockAnswers[query] || "Sorry, no data found for that query.";
+      setAnswer(result);
       setLoading(false);
     }, 1500);
   };
 
-  const handleChipClick = (question: string) => {
-    setInput(question);
-    handleAsk(question);
+  const handleChipClick = (q: string) => {
+    setInput(q);
+    handleAsk(q);
   };
 
   return (
