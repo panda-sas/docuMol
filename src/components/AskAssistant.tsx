@@ -1,10 +1,21 @@
 import { useState } from 'react';
 
 const mockAnswers: Record<string, string> = {
-  'What is BTZ-043?': 'BTZ-043 is a benzothiazinone targeting DprE1...',
-  'What models was it tested on?': 'BTZ-043 was tested in murine TB models...',
-  'Any known side effects?': 'No significant toxicity was reported...'
+  "What models was BTZ-043 tested on?":
+    "BTZ-043 was tested in murine infection models using BALB/c mice to assess efficacy against MDR-TB strains.",
+
+  "List all studies targeting InhA":
+    "Studies targeting InhA include BTZ-043 preclinical evaluation, as well as analog screening projects involving isoniazid resistance pathways.",
+
+  "Show me molecules effective against MDR-TB":
+    "BTZ-043 and other benzothiazinone derivatives have demonstrated significant in vivo activity against multidrug-resistant TB in murine models."
 };
+
+const exampleQuestions = [
+  "What models was BTZ-043 tested on?",
+  "List all studies targeting InhA",
+  "Show me molecules effective against MDR-TB"
+];
 
 export function AskAssistant() {
   const [input, setInput] = useState('');
@@ -33,6 +44,18 @@ export function AskAssistant() {
         <button onClick={handleAsk} className="mt-2 bg-blue-600 text-white px-4 py-1 rounded">
           Ask
         </button>
+      </div>
+
+      <div className="mb-4">
+        {exampleQuestions.map((q) => (
+          <button
+            key={q}
+            onClick={() => setInput(q)}
+            className="text-sm bg-gray-200 hover:bg-gray-300 rounded-full px-3 py-1 mr-2 mb-2"
+          >
+            {q}
+          </button>
+        ))}
       </div>
 
       {loading && <p className="text-gray-500 mt-2">Thinking…</p>}
