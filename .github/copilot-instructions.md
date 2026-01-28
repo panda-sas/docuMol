@@ -1,9 +1,9 @@
-# docuMol: AI Coding Agent Instructions
+# DocuStore: AI Coding Agent Instructions
 
 ## Project Overview
-**docuMol** is a pharma-research document intelligence platform that ingests, parses, and indexes R&D documents (PDF, Word, PowerPoint) using AI to extract molecular structures, auto-summarize content, and enable AI-enhanced search. The frontend is a React + TypeScript SPA built with Vite, Tailwind CSS, and shadcn/ui components.
+**DocuStore** is a pharma-research document intelligence platform that ingests, parses, and indexes R&D documents (PDF, Word, PowerPoint) using AI to extract molecular structures, auto-summarize content, and enable AI-enhanced search. The frontend is a React + TypeScript SPA built with Vite, Tailwind CSS, and shadcn/ui components.
 
-**Problem Solved**: Pharma R&D teams lose institutional knowledge trapped in legacy documents. docuMol makes buried research findable through automated extraction, SMILES conversion, tagging, and search.
+**Problem Solved**: Pharma R&D teams lose institutional knowledge trapped in legacy documents. DocuStore makes buried research findable through automated extraction, SMILES conversion, tagging, and search.
 
 ## Architecture Overview
 

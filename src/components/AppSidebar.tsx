@@ -18,7 +18,7 @@ export function AppSidebar() {
           <div className="p-2 rounded-xl bg-teal text-white">
             <Beaker className="w-5 h-5" />
           </div>
-          <span className="text-xl font-semibold text-sidebar-foreground">DocuMol</span>
+          <span className="text-xl font-semibold text-sidebar-foreground">DocuStore</span>
         </Link>
       </div>
 

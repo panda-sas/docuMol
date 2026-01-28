@@ -4,14 +4,16 @@ import { DocumentCard } from '@/components/DocumentCard';
 import { ResearchAskAssistant } from '@/components/ResearchAskAssistant';
 import { SearchInput } from '@/components/SearchInput';
 import { ResearchAskBar } from '@/components/ResearchAskBar';
+import { MoleculeSketchModal } from '@/components/MoleculeSketchModal';
 import { Button } from '@/components/ui/button';
 import { mockDocuments, PharmaDocument, currentUser } from '@/lib/mockData';
-import { FileText, TrendingUp, Tag } from 'lucide-react';
+import { FileText, TrendingUp, Tag, Beaker } from 'lucide-react';
 
 const Index = () => {
   const [documents, setDocuments] = useState<PharmaDocument[]>(mockDocuments);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAskBar, setShowAskBar] = useState(false);
+  const [showMoleculeModal, setShowMoleculeModal] = useState(false);
 
   const filteredDocuments = documents.filter((doc) => {
     const query = searchQuery.toLowerCase();
@@ -57,7 +59,7 @@ const Index = () => {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Document Dashboard</h1>
+            <h1 className="text-3xl font-bold text-foreground">DocuStore Dashboard</h1>
             <p className="text-muted-foreground mt-2">
               Browse and analyze your research documents.
             </p>
@@ -109,12 +111,22 @@ const Index = () => {
         </div>
 
         {/* Search */}
-        <div className="mb-8">
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search by title, summary, or tags..."
-          />
+        <div className="mb-8 flex gap-3">
+          <div className="flex-1">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search by title, summary, tags, or molecule name..."
+            />
+          </div>
+          <Button
+            onClick={() => setShowMoleculeModal(true)}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Beaker className="w-4 h-4" />
+            <span className="hidden sm:inline">Molecule</span>
+          </Button>
         </div>
 
         {/* Document Grid */}
@@ -139,6 +151,13 @@ const Index = () => {
             </div>
           )}
         </div>
+
+        {/* Molecule Sketch Modal */}
+        <MoleculeSketchModal
+          open={showMoleculeModal}
+          onOpenChange={setShowMoleculeModal}
+          onMoleculeSelect={(moleculeName) => setSearchQuery(moleculeName)}
+        />
       </div>
     </Layout>
   );
