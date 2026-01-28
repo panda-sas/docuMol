@@ -29,55 +29,161 @@ const cardVariants = {
   },
 };
 
+// Hero animation variants
+const heroHeadlineVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: 'easeOut',
+    },
+  },
+};
+
+const heroSubheadingVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: 'easeOut',
+      delay: 0.15,
+    },
+  },
+};
+
+const heroCTAVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: 'easeOut',
+      delay: 0.3,
+    },
+  },
+};
+
 export default function WelcomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-navy/5 via-background to-teal/5">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Soft emerald radial gradient background */}
+      <div className="absolute inset-0 bg-white">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-6xl max-h-[800px] bg-radial from-emerald-100/40 via-emerald-50/20 to-transparent rounded-full blur-3xl pointer-events-none" 
+             style={{
+               backgroundImage: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 25%, transparent 70%)',
+             }}>
+        </div>
+      </div>
+
       {/* Header */}
-      <header className="border-b border-border/40 backdrop-blur-sm">
+      <header className="relative z-10 border-b border-emerald-100/40 backdrop-blur-sm bg-white/80">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-teal text-white">
+            <div className="p-2 rounded-lg bg-emerald-600 text-white shadow-sm">
               <Beaker className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold text-foreground">DocuStore</span>
+            <span className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'Inter, sans-serif' }}>DocuStore</span>
           </Link>
           <Link to="/dashboard">
-            <Button className="bg-navy hover:bg-navy/90 text-white">
+            <Button className="bg-slate-900 hover:bg-slate-800 text-white shadow-sm">
               Sign In
             </Button>
           </Link>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="max-w-4xl mx-auto px-6 py-20 text-center space-y-8">
-        <div className="space-y-4">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
-            AI-powered assistant for TB drug discovery
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Search smarter. Extract insights. Accelerate research.
-          </p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <Link to="/dashboard">
-            <Button className="bg-teal hover:bg-teal/90 text-white px-8 py-6 text-lg rounded-lg flex items-center gap-2">
-              Get Started
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-          </Link>
-          <Button
-            variant="outline"
-            className="px-8 py-6 text-lg rounded-lg border-teal/30 hover:bg-teal/5"
+      {/* Hero Section - Sleek Biotech SaaS */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 py-32 text-center space-y-12">
+        <motion.div
+          className="space-y-8"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.1,
+              },
+            },
+          }}
+        >
+          {/* Headline */}
+          <motion.h1
+            className="text-5xl md:text-6xl font-semibold text-slate-900 leading-[1.1] tracking-tight"
+            style={{ fontFamily: 'Inter, sans-serif' }}
+            variants={heroHeadlineVariants}
           >
-            Learn More
-          </Button>
-        </div>
+            For Scientific Research in TB Drug Discovery
+          </motion.h1>
+
+          {/* Subheading */}
+          <motion.p
+            className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed"
+            style={{ fontFamily: 'Inter, sans-serif' }}
+            variants={heroSubheadingVariants}
+          >
+            Explore, analyze, and retrieve critical insights from R&D documents in seconds.
+          </motion.p>
+        </motion.div>
+
+        {/* CTA Buttons */}
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center pt-8"
+          variants={heroCTAVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <Link to="/dashboard">
+            <motion.div
+              whileHover={{ scale: 1.02, boxShadow: '0 20px 25px -5px rgba(16, 185, 129, 0.2)' }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-6 text-lg rounded-full font-semibold shadow-lg flex items-center gap-2 transition-all"
+                style={{ fontFamily: 'Inter, sans-serif' }}
+              >
+                Get Started
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
+          </Link>
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Button
+              variant="outline"
+              className="px-10 py-6 text-lg rounded-full font-semibold border-2 border-emerald-200 text-slate-900 hover:bg-emerald-50 bg-white transition-all"
+              style={{ fontFamily: 'Inter, sans-serif' }}
+            >
+              Learn More
+            </Button>
+          </motion.div>
+        </motion.div>
+
+        {/* Accent line */}
+        <motion.div
+          className="pt-8 flex justify-center"
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
+          style={{ transformOrigin: 'center' }}
+        >
+          <div className="w-12 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full"></div>
+        </motion.div>
       </section>
 
       {/* Features Section */}
-      <section className="max-w-5xl mx-auto px-6 py-20">
+      <section className="relative z-10 max-w-5xl mx-auto px-6 py-20">
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
           variants={containerVariants}
@@ -87,68 +193,80 @@ export default function WelcomePage() {
         >
           {/* Feature 1 */}
           <motion.div
-            className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all"
+            className="space-y-4 p-8 rounded-2xl border border-emerald-100 bg-white/50 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 backdrop-blur-sm"
             variants={cardVariants}
           >
-            <div className="w-12 h-12 rounded-xl bg-navy/10 text-navy flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
               <Upload className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground">Upload TB research documents</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-lg font-semibold text-slate-900" style={{ fontFamily: 'Inter, sans-serif' }}>Upload research documents</h3>
+            <p className="text-gray-600" style={{ fontFamily: 'Inter, sans-serif' }}>
               Support for PDF, Word, and PowerPoint formats. Automatically processed and indexed for instant search.
             </p>
           </motion.div>
 
           {/* Feature 2 */}
           <motion.div
-            className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all"
+            className="space-y-4 p-8 rounded-2xl border border-emerald-100 bg-white/50 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 backdrop-blur-sm"
             variants={cardVariants}
           >
-            <div className="w-12 h-12 rounded-xl bg-teal/10 text-teal flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
               <Zap className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground">Automatically extract molecules, entities & summaries</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-lg font-semibold text-slate-900" style={{ fontFamily: 'Inter, sans-serif' }}>Extract molecules & entities</h3>
+            <p className="text-gray-600" style={{ fontFamily: 'Inter, sans-serif' }}>
               AI-powered extraction of molecular structures, proteins, pathways, and auto-generated summaries.
             </p>
           </motion.div>
 
           {/* Feature 3 */}
           <motion.div
-            className="space-y-4 p-6 rounded-2xl border border-border/30 bg-card hover:border-teal/30 hover:shadow-lg hover:shadow-teal/5 transition-all"
+            className="space-y-4 p-8 rounded-2xl border border-emerald-100 bg-white/50 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 backdrop-blur-sm"
             variants={cardVariants}
           >
-            <div className="w-12 h-12 rounded-xl bg-violet/10 text-violet-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
               <Search className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground">Ask questions and find similar studies</h3>
-            <p className="text-muted-foreground">
-              Semantic search by molecule, protein, or SMILES. Find related documents instantly.
+            <h3 className="text-lg font-semibold text-slate-900" style={{ fontFamily: 'Inter, sans-serif' }}>Semantic search</h3>
+            <p className="text-gray-600" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Search by molecule, protein, or SMILES. Find related documents with AI-powered matching.
             </p>
           </motion.div>
         </motion.div>
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-4xl mx-auto px-6 py-20 text-center">
-        <div className="space-y-6 p-8 md:p-12 rounded-3xl border border-border/30 bg-gradient-to-br from-navy/5 to-teal/5">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Ready to accelerate your TB research?
+      <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
+        <motion.div
+          className="space-y-8 p-12 rounded-3xl border border-emerald-100 bg-gradient-to-br from-white via-emerald-50/30 to-white shadow-xl"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900" style={{ fontFamily: 'Inter, sans-serif' }}>
+            Ready to transform your research?
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join researchers who are using DocuStore to unlock insights from their document libraries.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed" style={{ fontFamily: 'Inter, sans-serif' }}>
+            Join research teams unlocking insights from legacy documents with AI-powered intelligence.
           </p>
           <Link to="/dashboard">
-            <Button className="bg-teal hover:bg-teal/90 text-white px-8 py-6 text-lg rounded-lg">
-              Start exploring now
-            </Button>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-6 text-lg rounded-full font-semibold shadow-lg transition-all"
+                style={{ fontFamily: 'Inter, sans-serif' }}>
+                Start exploring now
+              </Button>
+            </motion.div>
           </Link>
-        </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 mt-20">
-        <div className="max-w-7xl mx-auto px-6 py-8 text-center text-muted-foreground text-sm">
+      <footer className="relative z-10 border-t border-emerald-100/40 mt-20 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 py-8 text-center text-gray-500 text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
           <p>DocuStore © 2026. AI-powered document intelligence for pharmaceutical research.</p>
         </div>
       </footer>
